@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Data.Common;
+using System.Xml.Serialization;
 using ToDoListApi.Data;
 using ToDoListApi.Entities;
 using ToDoListApi.Models;
@@ -57,13 +58,13 @@ namespace ToDoListApi.Controllers.V1
             catch (DbUpdateException ex)
             {
                 _logger.LogError(ex, "Failed to save new status");
-                return BadRequest("Error occured while saving");
+                return StatusCode(500, "Internal DB error");
             }
 
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unexpected error occured");
-                return BadRequest("Error occured while processing");
+                return StatusCode(500, "Server error occured");
             }
 
             return Created(nameof(PostStatus), new { Id = newStat.Id, newStat });
@@ -72,7 +73,60 @@ namespace ToDoListApi.Controllers.V1
         [HttpPut("{Id:long}")]
         public async Task<IActionResult> PutStatus(long Id, [FromBody] StatusDTO status)
         {
-            return Ok();
+            if (Id != status.Id) return BadRequest("Ids does not match!");
+
+            if (!await IsStatusExists(status)) return NotFound();
+
+            var res = _mapper.Map<Status>(status);
+
+            try
+            {
+                _context.Entry(res).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+
+            catch (DbException ex)
+            {
+                _logger.LogError(ex, "Failed to update status");
+                return StatusCode(500, "Internal DB error");
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error occured");
+                return StatusCode(500, "Server error occured");
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("{Id:long}")]
+        public async Task<ActionResult> DeleteStatus(long Id)
+        {
+            if (Id <= 0) return BadRequest("Id out of range!");
+
+            Status? foundStat = await _context.Statuses.FindAsync(Id);
+
+            if (foundStat == null) return NotFound();
+
+            try
+            {
+                _context.Statuses.Remove(foundStat);
+                await _context.SaveChangesAsync();
+            }
+
+            catch (DbException ex)
+            {
+                _logger.LogError(ex, "Problem occured while deleting status");
+                return StatusCode(500, "Internal DB error");
+            }
+
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error occured while deleting status");
+                return StatusCode(500, "Server error occured");
+            }
+
+            return NoContent();
         }
 
         private async Task<bool> IsStatusExists(StatusDTO stat)
