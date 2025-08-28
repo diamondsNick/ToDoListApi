@@ -1,15 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ToDoListApi.Entities
+namespace ToDoListApi.Models
 {
-    public class AssigmentPage
+    public class AssignmentPageDTO
     {
         [Required]
         public long AssignmentId { get; set; }
         [Required]
         public long PageId { get; set; }
-        public required Assignment Assignment { get; set; }
-        public required Page Page { get; set; }
-
     }
 }

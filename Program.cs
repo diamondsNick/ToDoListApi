@@ -26,6 +26,8 @@ builder.Services.AddAutoMapper(config =>
     config.CreateMap<StatusDTO, Status>();
     config.CreateMap<Page, PageDTO>();
     config.CreateMap<PageDTO, Page>();
+    config.CreateMap<AssigmentPage, AssignmentPageDTO>();
+    config.CreateMap<AssignmentPageDTO, AssigmentPage>();
 });
 
 builder.Services.AddDbContext<ToDoListApi.Data.ToDoDbContext>(options =>

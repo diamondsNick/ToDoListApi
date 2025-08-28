@@ -24,19 +24,14 @@ namespace ToDoListApi.Migrations
 
             modelBuilder.Entity("ToDoListApi.Entities.AssigmentPage", b =>
                 {
-                    b.Property<long>("AssigmentId")
+                    b.Property<long>("AssignmentId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("PageId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("AssignmentId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("AssigmentId", "PageId")
+                    b.HasKey("AssignmentId", "PageId")
                         .HasName("PK_Page_Assignment");
-
-                    b.HasIndex("AssignmentId");
 
                     b.HasIndex("PageId");
 
@@ -51,14 +46,16 @@ namespace ToDoListApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime>("CompletionDate")
+                    b.Property<DateTime?>("CompletionDate")
                         .HasColumnType("datetime2(0)");
 
-                    b.Property<DateTime>("CompletionDeadline")
+                    b.Property<DateTime?>("CompletionDeadline")
                         .HasColumnType("datetime2(0)");
 
                     b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2(0)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2(0)")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<long>("StatusId")
                         .HasColumnType("bigint");
@@ -162,7 +159,7 @@ namespace ToDoListApi.Migrations
             modelBuilder.Entity("ToDoListApi.Entities.AssigmentPage", b =>
                 {
                     b.HasOne("ToDoListApi.Entities.Assignment", "Assignment")
-                        .WithMany("AssigmentsPages")
+                        .WithMany("AssignmentsPages")
                         .HasForeignKey("AssignmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -206,7 +203,7 @@ namespace ToDoListApi.Migrations
 
             modelBuilder.Entity("ToDoListApi.Entities.Assignment", b =>
                 {
-                    b.Navigation("AssigmentsPages");
+                    b.Navigation("AssignmentsPages");
                 });
 
             modelBuilder.Entity("ToDoListApi.Entities.Page", b =>

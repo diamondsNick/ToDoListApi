@@ -33,7 +33,6 @@ namespace ToDoListApi.Data
                     .HasDefaultValueSql("GETUTCDATE()");
             });
                 
-
             modelBuilder.Entity<Entities.User>(entity =>
             {
                 entity.ToTable("Users");
@@ -81,7 +80,8 @@ namespace ToDoListApi.Data
                     .HasConstraintName("FK_Assignment_Status");
 
                 entity.Property(a => a.CreationDate)
-                    .HasColumnType("datetime2(0)");
+                    .HasColumnType("datetime2(0)")
+                    .HasDefaultValueSql("GETUTCDATE()");
                 entity.Property(a => a.CompletionDate)
                     .HasColumnType("datetime2(0)");
                 entity.Property(a => a.CompletionDeadline)
@@ -95,11 +95,11 @@ namespace ToDoListApi.Data
             modelBuilder.Entity<Entities.AssigmentPage>(entity =>
             {
                 entity.ToTable("AssignmentsPages");
-                entity.HasKey(e => new { e.AssigmentId, e.PageId })
+                entity.HasKey(e => new { e.AssignmentId, e.PageId })
                     .HasName("PK_Page_Assignment");
 
                 entity.HasOne(e => e.Assignment)
-                    .WithMany(a => a.AssigmentsPages)
+                    .WithMany(a => a.AssignmentsPages)
                     .HasConstraintName("FK_Assignment_AssignmentPage");
 
                 entity.HasOne(e => e.Page)

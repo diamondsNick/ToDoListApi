@@ -7,10 +7,10 @@ namespace ToDoListApi.Entities
         public long Id { get; set; }
         public required string Text { get; set; }
         public required long StatusId { get; set; }
-        public required DateTime CreationDate { get; set; }
-        public DateTime CompletionDate { get; set; }
-        public DateTime CompletionDeadline { get; set; }
+        public required DateTime CreationDate { get; set; } = DateTime.UtcNow;
+        public DateTime? CompletionDate { get; set; }
+        public DateTime? CompletionDeadline { get; set; }
         public required Status CurStatus { get; set; }
-        public List<AssigmentPage> AssigmentsPages { get; set; }
+        public List<AssigmentPage> AssignmentsPages { get; set; }
     }
 }

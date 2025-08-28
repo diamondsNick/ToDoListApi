@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ToDoListApi.Migrations
 {
     /// <inheritdoc />
-    public partial class innitBruv : Migration
+    public partial class reeg11 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Status",
+                name: "Statuses",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -39,16 +39,16 @@ namespace ToDoListApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ToDos",
+                name: "Assignments",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Text = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     StatusId = table.Column<long>(type: "bigint", nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CompletionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CompletionDeadline = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreationDate = table.Column<DateTime>(type: "datetime2(0)", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    CompletionDate = table.Column<DateTime>(type: "datetime2(0)", nullable: true),
+                    CompletionDeadline = table.Column<DateTime>(type: "datetime2(0)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -57,7 +57,7 @@ namespace ToDoListApi.Migrations
                     table.ForeignKey(
                         name: "FK_Assignment_Status",
                         column: x => x.StatusId,
-                        principalTable: "Status",
+                        principalTable: "Statuses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -69,7 +69,7 @@ namespace ToDoListApi.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PageName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2(0)", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     UserId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -84,20 +84,19 @@ namespace ToDoListApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AssigmentPages",
+                name: "AssignmentsPages",
                 columns: table => new
                 {
-                    AssigmentId = table.Column<long>(type: "bigint", nullable: false),
-                    PageId = table.Column<long>(type: "bigint", nullable: false),
-                    AssignmentId = table.Column<long>(type: "bigint", nullable: false)
+                    AssignmentId = table.Column<long>(type: "bigint", nullable: false),
+                    PageId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Page_Assignment", x => new { x.AssigmentId, x.PageId });
+                    table.PrimaryKey("PK_Page_Assignment", x => new { x.AssignmentId, x.PageId });
                     table.ForeignKey(
                         name: "FK_Assignment_AssignmentPage",
                         column: x => x.AssignmentId,
-                        principalTable: "ToDos",
+                        principalTable: "Assignments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -109,13 +108,13 @@ namespace ToDoListApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AssigmentPages_AssignmentId",
-                table: "AssigmentPages",
-                column: "AssignmentId");
+                name: "IX_Assignments_StatusId",
+                table: "Assignments",
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AssigmentPages_PageId",
-                table: "AssigmentPages",
+                name: "IX_AssignmentsPages_PageId",
+                table: "AssignmentsPages",
                 column: "PageId");
 
             migrationBuilder.CreateIndex(
@@ -125,14 +124,9 @@ namespace ToDoListApi.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Status_Name",
-                table: "Status",
+                table: "Statuses",
                 column: "Name",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ToDos_StatusId",
-                table: "ToDos",
-                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Login",
@@ -145,16 +139,16 @@ namespace ToDoListApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AssigmentPages");
+                name: "AssignmentsPages");
 
             migrationBuilder.DropTable(
-                name: "ToDos");
+                name: "Assignments");
 
             migrationBuilder.DropTable(
                 name: "Pages");
 
             migrationBuilder.DropTable(
-                name: "Status");
+                name: "Statuses");
 
             migrationBuilder.DropTable(
                 name: "Users");
