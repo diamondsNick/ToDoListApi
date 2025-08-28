@@ -87,5 +87,38 @@ namespace ToDoListApi.Controllers.V1
             return CreatedAtAction(nameof(PostAssingedPage), assignmentPage);
         }
 
+        [HttpDelete]
+        public async Task<ActionResult> DeleteAssingedPage([FromRoute] long PageId, [FromRoute] long AssignmentId)
+        {
+            if(!await _context.AssigmentPages.AnyAsync(ap => ap.PageId == PageId && ap.AssignmentId == AssignmentId))
+            {
+                return NotFound("Object does not exist.");
+            }
+
+            try
+            {
+                var found = await _context.AssigmentPages
+                    .FirstOrDefaultAsync(ap => ap.PageId == PageId && ap.AssignmentId == AssignmentId);
+
+                _context.AssigmentPages.Remove(found);
+
+                await _context.SaveChangesAsync();
+            }
+
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError(ex, "Error occured while deleting AssingedPage object from DB.");
+                return Problem("Internal DB error.", statusCode:500);
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured while processing deletion of object.");
+                return Problem("Internal server error.", statusCode: 500);
+            }
+
+            return NoContent();
+        }
+
     }
 }
