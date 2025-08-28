@@ -24,6 +24,8 @@ builder.Services.AddAutoMapper(config =>
 {
     config.CreateMap<Status, StatusDTO>();
     config.CreateMap<StatusDTO, Status>();
+    config.CreateMap<Page, PageDTO>();
+    config.CreateMap<PageDTO, Page>();
 });
 
 builder.Services.AddDbContext<ToDoListApi.Data.ToDoDbContext>(options =>
@@ -38,8 +40,6 @@ builder.Services.AddHttpLogging(options =>
 {
     options.LoggingFields = HttpLoggingFields.All;
 });
-
-//builder.Logging.AddFile("Logs/myapp.txt");
 
 var app = builder.Build();
 

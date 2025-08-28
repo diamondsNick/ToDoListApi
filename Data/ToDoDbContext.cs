@@ -29,7 +29,8 @@ namespace ToDoListApi.Data
                     .HasConstraintName("FK_User_Pages");
 
                 entity.Property(a => a.CreationDate)
-                    .HasColumnType("datetime2(0)");
+                    .HasColumnType("datetime2(0)")
+                    .HasDefaultValueSql("GETUTCDATE()");
             });
                 
 

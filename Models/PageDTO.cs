@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ToDoListApi.Entities
+namespace ToDoListApi.Models
 {
-    public class Page
+    public class PageDTO
     {
         public long Id { get; set; }
         [Required]
@@ -10,7 +10,5 @@ namespace ToDoListApi.Entities
         public DateTime CreationDate { get; set; } = DateTime.UtcNow;
         [Required]
         public long UserId { get; set; }
-        public required User Author { get; set; }
-        public List<AssigmentPage> AssigmentsPages { get; set; }
     }
 }

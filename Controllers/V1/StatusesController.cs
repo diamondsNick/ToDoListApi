@@ -58,7 +58,7 @@ namespace ToDoListApi.Controllers.V1
             catch (DbUpdateException ex)
             {
                 _logger.LogError(ex, "Failed to save new status");
-                return StatusCode(500, "Internal DB error");
+                return Problem("Internal DB error", statusCode: 500);
             }
 
             catch (Exception ex)
@@ -67,7 +67,7 @@ namespace ToDoListApi.Controllers.V1
                 return StatusCode(500, "Server error occured");
             }
 
-            return Created(nameof(PostStatus), new { Id = newStat.Id, newStat });
+            return Created(nameof(PostStatus), new { newStat });
         }
 
         [HttpPut("{Id:long}")]
@@ -85,16 +85,16 @@ namespace ToDoListApi.Controllers.V1
                 await _context.SaveChangesAsync();
             }
 
-            catch (DbException ex)
+            catch (DbUpdateException ex)
             {
                 _logger.LogError(ex, "Failed to update status");
-                return StatusCode(500, "Internal DB error");
+                return Problem("Internal DB error", statusCode: 500);
             }
 
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unexpected error occured");
-                return StatusCode(500, "Server error occured");
+                return Problem("Server error occured", statusCode: 500);
             }
             return NoContent();
         }
@@ -114,16 +114,16 @@ namespace ToDoListApi.Controllers.V1
                 await _context.SaveChangesAsync();
             }
 
-            catch (DbException ex)
+            catch (DbUpdateException ex)
             {
                 _logger.LogError(ex, "Problem occured while deleting status");
-                return StatusCode(500, "Internal DB error");
+                return Problem("Internal DB error", statusCode: 500);
             }
 
             catch(Exception ex)
             {
                 _logger.LogError(ex, "Unexpected error occured while deleting status");
-                return StatusCode(500, "Server error occured");
+                return Problem("Server error occured", statusCode: 500);
             }
 
             return NoContent();
