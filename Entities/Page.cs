@@ -11,6 +11,6 @@ namespace ToDoListApi.Entities
         [Required]
         public long UserId { get; set; }
         public required User Author { get; set; }
-        public List<AssigmentPage> AssigmentsPages { get; set; }
+        public List<Assignment>? Assignments{ get; set; }
     }
 }

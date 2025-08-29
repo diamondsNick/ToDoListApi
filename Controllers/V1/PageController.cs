@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.Data.Common;
-using System.Linq;
 using ToDoListApi.Data;
 using ToDoListApi.Entities;
 using ToDoListApi.Models;
@@ -41,13 +37,25 @@ namespace ToDoListApi.Controllers.V1
         {
             var res = _context.Pages.AsQueryable();
 
-            if (pageId.HasValue) res = res.Where(p => p.Id == pageId);
+            if (pageId.HasValue)
+            {
+                res = res.Where(p => p.Id == pageId);
+            }
 
-            if (!string.IsNullOrWhiteSpace(pageName)) res = res.Where(p => p.PageName == pageName);
+            if (!string.IsNullOrWhiteSpace(pageName))
+            {
+                res = res.Where(p => p.PageName == pageName);
+            }
 
-            if (userId.HasValue) res = res.Where(p => p.UserId == userId);
+            if (userId.HasValue) 
+            { 
+                res = res.Where(p => p.UserId == userId);
+            }
 
-            if (creationDate.HasValue) res = res.Where(p => p.CreationDate == creationDate.Value.Date);
+            if (creationDate.HasValue)
+            {
+                res = res.Where(p => p.CreationDate == creationDate.Value.Date);
+            }
 
             sortBy = string.IsNullOrEmpty(sortBy) ? sortBy : sortBy.ToLower();
             order = string.IsNullOrEmpty(order) ? order : order.ToLower();
@@ -119,10 +127,10 @@ namespace ToDoListApi.Controllers.V1
             catch (DbUpdateException ex)
             {
                 _logger.LogError(ex, "Error occured while saving new page.");
-                return Problem("Internal DB error.", statusCode:500);
+                return Problem("Internal DB error.", statusCode: 500);
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Unexpected error occured while saving new page.");
                 return Problem("Internal server error.", statusCode: 500);
@@ -180,23 +188,23 @@ namespace ToDoListApi.Controllers.V1
 
             if (deleted == null) return NotFound("Page does not exist.");
 
-            if(await _context.AssigmentPages.AnyAsync(p => p.PageId == Id))
+            if (await _context.Assignments.AnyAsync(p => p.PageId == Id))
             {
                 try
                 {
-                    _context.AssigmentPages.RemoveRange(_context.AssigmentPages.Where(p => p.PageId == Id));
+                    _context.Assignments.RemoveRange(_context.Assignments.Where(p => p.PageId == Id));
                     await _context.SaveChangesAsync();
                 }
 
                 catch (DbUpdateException ex)
                 {
-                    _logger.LogError(ex, "Error occured while deleting page.");
+                    _logger.LogError(ex, "Error occured while deleting assignments for page.");
                     return Problem("Internal DB error.", statusCode: 500);
                 }
 
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Unexpected error occured while deleting page.");
+                    _logger.LogError(ex, "Unexpected error occured while deleting assignments from page.");
                     return Problem("Internal server error.", statusCode: 500);
                 }
             }
@@ -225,7 +233,7 @@ namespace ToDoListApi.Controllers.V1
         private async Task<bool> PageExists(PageDTO page)
         {
             var res = await _context.Pages
-                .AnyAsync(p => p.Id == page.Id || 
+                .AnyAsync(p => p.Id == page.Id ||
                     (p.PageName == page.PageName && p.UserId == page.UserId));
             return res;
         }

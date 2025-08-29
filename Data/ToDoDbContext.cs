@@ -12,12 +12,11 @@ namespace ToDoListApi.Data
         public DbSet<Entities.User> Users { get; set; }
         public DbSet<Entities.Assignment> Assignments { get; set; }
         public DbSet<Entities.Status> Statuses { get; set; }
-        public DbSet<Entities.AssigmentPage> AssigmentPages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Entities.Page>(entity =>
-            { 
+            {
                 entity.HasKey(e => e.Id)
                 .HasName("PK_Pages");
 
@@ -32,7 +31,7 @@ namespace ToDoListApi.Data
                     .HasColumnType("datetime2(0)")
                     .HasDefaultValueSql("GETUTCDATE()");
             });
-                
+
             modelBuilder.Entity<Entities.User>(entity =>
             {
                 entity.ToTable("Users");
@@ -79,6 +78,11 @@ namespace ToDoListApi.Data
                     .HasForeignKey(e => e.StatusId)
                     .HasConstraintName("FK_Assignment_Status");
 
+                entity.HasOne(a => a.Page)
+                    .WithMany(p => p.Assignments)
+                    .HasForeignKey(a => a.PageId)
+                    .HasConstraintName("FK_Assignment_Page");
+
                 entity.Property(a => a.CreationDate)
                     .HasColumnType("datetime2(0)")
                     .HasDefaultValueSql("GETUTCDATE()");
@@ -90,21 +94,6 @@ namespace ToDoListApi.Data
                 entity.HasCheckConstraint(
                     "CK_Assignment_CreationDate",
                     "CreationDate >= '2025-01-01'");
-            });
-
-            modelBuilder.Entity<Entities.AssigmentPage>(entity =>
-            {
-                entity.ToTable("AssignmentsPages");
-                entity.HasKey(e => new { e.AssignmentId, e.PageId })
-                    .HasName("PK_Page_Assignment");
-
-                entity.HasOne(e => e.Assignment)
-                    .WithMany(a => a.AssignmentsPages)
-                    .HasConstraintName("FK_Assignment_AssignmentPage");
-
-                entity.HasOne(e => e.Page)
-                    .WithMany(p => p.AssigmentsPages)
-                    .HasConstraintName("FK_Page_AssignmentPage");
             });
         }
 

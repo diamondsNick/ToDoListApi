@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using System.Data.Common;
-using System.Xml.Serialization;
 using ToDoListApi.Data;
 using ToDoListApi.Entities;
 using ToDoListApi.Models;
@@ -120,7 +116,7 @@ namespace ToDoListApi.Controllers.V1
                 return Problem("Internal DB error", statusCode: 500);
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Unexpected error occured while deleting status");
                 return Problem("Server error occured", statusCode: 500);

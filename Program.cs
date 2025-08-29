@@ -1,9 +1,5 @@
-using AutoMapper;
 using Microsoft.AspNetCore.HttpLogging;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using ToDoListApi.Entities;
 using ToDoListApi.Models;
 
@@ -26,8 +22,8 @@ builder.Services.AddAutoMapper(config =>
     config.CreateMap<StatusDTO, Status>();
     config.CreateMap<Page, PageDTO>();
     config.CreateMap<PageDTO, Page>();
-    config.CreateMap<AssigmentPage, AssignmentPageDTO>();
-    config.CreateMap<AssignmentPageDTO, AssigmentPage>();
+    config.CreateMap<Assignment, AssignmentDTO>();
+    config.CreateMap<AssignmentDTO, Assignment>();
 });
 
 builder.Services.AddDbContext<ToDoListApi.Data.ToDoDbContext>(options =>
@@ -38,7 +34,7 @@ builder.Services.AddDbContext<ToDoListApi.Data.ToDoDbContext>(options =>
 
 builder.Services.AddLogging();
 
-builder.Services.AddHttpLogging(options => 
+builder.Services.AddHttpLogging(options =>
 {
     options.LoggingFields = HttpLoggingFields.All;
 });

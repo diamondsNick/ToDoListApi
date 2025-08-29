@@ -1,6 +1,6 @@
-﻿namespace ToDoListApi.Entities
+﻿namespace ToDoListApi.Models
 {
-    public class Assignment
+    public class AssignmentDTO
     {
         public long Id { get; set; }
         public required string Text { get; set; }
@@ -9,7 +9,5 @@
         public required DateTime CreationDate { get; set; } = DateTime.UtcNow;
         public DateTime? CompletionDate { get; set; }
         public DateTime? CompletionDeadline { get; set; }
-        public required Status CurStatus { get; set; }
-        public Page? Page { get; set; }
     }
 }

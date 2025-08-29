@@ -1,6 +1,4 @@
-﻿using ToDoListApi.Models;
-
-namespace ToDoListApi.Entities
+﻿namespace ToDoListApi.Entities
 {
     public class Status
     {
